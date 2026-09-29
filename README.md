@@ -40,6 +40,28 @@ curso_reservas/
 | 7 | Toques profesionales | exportar a Excel, validaciones |
 | 8 | Entrega | ejecutable con PyInstaller, README final |
 
+## Poner en marcha el proyecto (clase 3)
+
+Desde una terminal en la carpeta `curso_reservas` (en VS Code: *Terminal → New Terminal*):
+
+```bash
+# 1. Crear el entorno virtual (una sola vez)
+python -m venv .venv
+
+# 2. Activarlo (cada vez que abrís una terminal nueva)
+.venv\Scripts\activate          # Windows
+source .venv/bin/activate       # macOS / Linux
+
+# 3. Instalar las librerías del proyecto
+pip install -r requirements.txt
+
+# 4. Crear la base con los datos de ejemplo
+python -m app.bd
+```
+
+El paso 4 crea `reservas.db`. Podés abrirla con DB Browser for SQLite para mirarla.
+La base **no se sube a git**: cada uno la genera con este comando.
+
 ## Requisitos para instalar (antes de la clase 3)
 
 - Python 3.12 o superior — <https://www.python.org/downloads/>
