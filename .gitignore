@@ -1,0 +1,31 @@
+# Entorno virtual
+.venv/
+venv/
+entorno/
+
+# Python
+__pycache__/
+*.pyc
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# Base de datos local (se genera con datos/esquema.sql)
+*.db
+*.db-journal
+
+# Credenciales y configuración local: NUNCA al repositorio
+credenciales*.json
+credentials*.json
+.env
+
+# Exportaciones generadas por la app
+exportaciones/
+
+# Editor / sistema
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
