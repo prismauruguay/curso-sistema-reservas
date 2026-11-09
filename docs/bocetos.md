@@ -79,6 +79,12 @@
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
+> **Cambios en la clase 6.** *Cambiar fecha* y *Anular* actúan sobre el lote
+> elegido en la tabla, y van pegados a ella. El formulario queda solo para
+> lotes nuevos, y *Cambiar fecha* pide la fecha en un cuadro aparte. Se
+> agregaron las columnas *Reservado* y *Entregado*, que explican el
+> *Disponible*. Ver [interfaz II](interfaz_2.md#6-del-boceto-a-la-pantalla).
+
 ## Reservas (RF-08 a RF-11)
 
 ```
@@ -102,3 +108,9 @@
 > Observación para la clase 2: en esta pantalla mostramos **Producto** y la
 > **fecha de arribo** de cada reserva… ¿hace falta *guardarlos* en la reserva,
 > o alcanza con saber el **lote**?
+
+> **Cambios en la clase 6.** Se agregó el filtro por **Producto**: RF-11 lo
+> pide y este boceto se lo olvidó. También la columna *Arribo*. *Entregar* y
+> *Cancelar* actúan sobre la reserva elegida y van pegados a la tabla.
+> *Reservar* va con el formulario. Ver
+> [interfaz II](interfaz_2.md#6-del-boceto-a-la-pantalla).

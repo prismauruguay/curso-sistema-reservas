@@ -1,5 +1,8 @@
 """
 Menú principal (clase 5). Implementa el boceto de docs/bocetos.md.
+
+Además de abrir pantallas, coordina: cuando una pantalla guarda algo, el menú
+les avisa a las otras que están abiertas para que se actualicen (clase 6).
 """
 
 import traceback
@@ -9,6 +12,9 @@ import customtkinter as ctk
 
 from app.ui import estilo
 from app.ui.clientes import VentanaClientes
+from app.ui.lotes import VentanaLotes
+from app.ui.productos import VentanaProductos
+from app.ui.reservas import VentanaReservas
 
 
 class VentanaPrincipal(ctk.CTk):
@@ -28,9 +34,9 @@ class VentanaPrincipal(ctk.CTk):
         opciones = [
             # texto               pantalla (None = todavía no existe)
             ("Clientes",          VentanaClientes),
-            ("Productos",         None),     # clase 6
-            ("Lotes",             None),     # clase 6
-            ("Reservas",          None),     # clase 6
+            ("Productos",         VentanaProductos),
+            ("Lotes",             VentanaLotes),
+            ("Reservas",          VentanaReservas),
             ("Exportar a Excel",  None),     # clase 7
         ]
         for texto, pantalla in opciones:
@@ -56,6 +62,16 @@ class VentanaPrincipal(ctk.CTk):
             ventana.focus_set()
             return
         self.ventanas[nombre] = pantalla(self, self.con)
+
+    def datos_cambiaron(self, origen):
+        """Una pantalla guardó algo: las demás abiertas vuelven a leer.
+
+        Sin esto, con Reservas y Lotes abiertas a la vez, una reserva nueva
+        no se vería en el Disponible de Lotes hasta cerrarla y abrirla.
+        """
+        for ventana in self.ventanas.values():
+            if ventana is not origen and ventana.winfo_exists():
+                ventana.actualizar()
 
     def report_callback_exception(self, tipo, valor, rastro):
         """Tkinter llama a esto cuando un botón produce un error NO previsto

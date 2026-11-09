@@ -13,8 +13,6 @@ Lo que esta pantalla hace y lo que NO:
     el mensaje tal cual.
 """
 
-from tkinter import messagebox
-
 import customtkinter as ctk
 
 from app import bd, negocio
@@ -102,6 +100,10 @@ class VentanaClientes(ctk.CTkToplevel):
     #  Comportamiento
     # -----------------------------------------------------------------
 
+    def actualizar(self):
+        """El menú llama a esto cuando OTRA pantalla cambió datos."""
+        self.actualizar_tabla(seleccionar=self.cliente_id)
+
     def actualizar_tabla(self, seleccionar=None):
         """Vuelve a leer los clientes. Si se indica un id, lo deja marcado."""
         self.tabla.delete(*self.tabla.get_children())
@@ -118,15 +120,21 @@ class VentanaClientes(ctk.CTkToplevel):
         seleccion = self.tabla.selection()
         if not seleccion:
             return
-        cliente = bd.obtener_cliente(self.con, int(seleccion[0]))
+        cliente_id = int(seleccion[0])
+        # Ojo: este evento también llega cuando la tabla vuelve a marcar el
+        # cliente que ya estaba en el formulario (después de guardar, o al
+        # actualizar). En ese caso no se toca nada: ni el aviso "guardado"
+        # ni lo que el usuario esté escribiendo.
+        if cliente_id != self.cliente_id:
+            self._cargar_formulario(cliente_id)
+            self.aviso.configure(text="")
+
+    def _cargar_formulario(self, cliente_id):
+        cliente = bd.obtener_cliente(self.con, cliente_id)
         for clave, caja in self.campos.items():
             estilo.escribir(caja, cliente[clave])
-        # Ojo: este evento también llega cuando guardar() vuelve a marcar el
-        # cliente recién guardado. En ese caso el aviso "guardado" se deja.
-        if cliente["id"] != self.cliente_id:
-            self.aviso.configure(text="")
-        self.cliente_id = cliente["id"]
-        self.modo.configure(text=f"Modificando el cliente Nº {cliente['id']}")
+        self.cliente_id = cliente_id
+        self.modo.configure(text=f"Modificando el cliente Nº {cliente_id}")
 
     def nuevo(self):
         """Deja el formulario vacío para cargar un cliente nuevo."""
@@ -143,15 +151,16 @@ class VentanaClientes(ctk.CTkToplevel):
         datos = {clave: caja.get() for clave, caja in self.campos.items()}
         try:
             if self.cliente_id is None:
-                self.cliente_id = negocio.agregar_cliente(self.con, **datos)
+                guardado = negocio.agregar_cliente(self.con, **datos)
             else:
-                negocio.modificar_cliente(self.con, self.cliente_id, **datos)
+                guardado = self.cliente_id
+                negocio.modificar_cliente(self.con, guardado, **datos)
         except ErrorNegocio as error:
-            # parent=self: el aviso aparece sobre esta ventana, no sobre el menú.
-            messagebox.showwarning("No se pudo guardar", str(error), parent=self)
+            estilo.avisar(self, error)
             return
 
-        guardado = self.cliente_id
-        self.texto_buscar.set("")      # que el cliente guardado se vea en la lista
+        self._cargar_formulario(guardado)    # muestra los datos como quedaron
+        self.texto_buscar.set("")            # que el cliente guardado se vea
         self.actualizar_tabla(seleccionar=guardado)
         self.aviso.configure(text=f"Cliente Nº {guardado} guardado.")
+        self.master.datos_cambiaron(self)    # Reservas muestra clientes

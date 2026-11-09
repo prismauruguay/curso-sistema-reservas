@@ -70,6 +70,31 @@ def _datos_cliente(nombre, direccion, telefono, email):
 
 
 # ---------------------------------------------------------------------
+#  Productos (clase 6)
+#
+#  Como en clientes: por ahora solo que el nombre no esté vacío. Un nombre
+#  repetido lo frena la base (UNIQUE); el mensaje claro llega en la clase 7.
+# ---------------------------------------------------------------------
+
+def agregar_producto(con, nombre):
+    """RF-03. Devuelve el id que le asignó la base."""
+    return bd.agregar_producto(con, _nombre_producto(nombre))
+
+
+def renombrar_producto(con, producto_id, nombre):
+    if bd.obtener_producto(con, producto_id) is None:
+        raise ErrorNegocio(f"No existe el producto {producto_id}.")
+    bd.renombrar_producto(con, producto_id, _nombre_producto(nombre))
+
+
+def _nombre_producto(nombre):
+    nombre = (nombre or "").strip()
+    if not nombre:
+        raise ErrorNegocio("Falta completar: nombre.")
+    return nombre
+
+
+# ---------------------------------------------------------------------
 #  Lotes
 # ---------------------------------------------------------------------
 

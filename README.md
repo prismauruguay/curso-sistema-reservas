@@ -32,6 +32,10 @@ orden:
    tienen cada uno su tratamiento. También muestra qué cambió del boceto al
    programarlo, y un error que no se veía leyendo el código pero apareció al
    probar.
+6. **[Interfaz II](docs/interfaz_2.md)**: convertir lo que escribe el usuario,
+   mantener al día varias ventanas abiertas y confirmar lo que no tiene vuelta
+   atrás. También muestra un filtro que el boceto olvidó, y que apareció al
+   revisar la pantalla contra los requisitos.
 
 El código llega recién en la clase 3. La historia de commits y las etiquetas
 `clase-NN` muestran el proceso en orden.
@@ -42,7 +46,7 @@ Cada clase termina en una **etiqueta de git** (`clase-01`, `clase-02`, …).
 Si faltaste o te atrasaste, podés ponerte al día con:
 
 ```bash
-git checkout clase-05
+git checkout clase-06
 ```
 
 ## Estructura
@@ -52,7 +56,7 @@ curso_reservas/
 ├── docs/       requisitos, bocetos, modelo de datos, lógica de negocio, interfaz
 ├── datos/      script de creación de la base y datos de ejemplo
 ├── app/        el código de la aplicación
-├── tests/      pruebas de la lógica de negocio
+├── tests/      pruebas de las reglas y de las conversiones de pantalla
 └── requirements.txt
 ```
 
@@ -65,7 +69,7 @@ curso_reservas/
 | 3 | Proyecto y base de datos | entorno virtual, git, `app/bd.py` |
 | 4 | Lógica de negocio | `app/negocio.py` + `tests/`, `docs/logica_negocio.md` |
 | 5 | Interfaz I | ventana principal y pantalla de Clientes, `docs/interfaz.md` |
-| 6 | Interfaz II | pantallas de Lotes y Reservas |
+| 6 | Interfaz II | pantallas de Productos, Lotes y Reservas, `docs/interfaz_2.md` |
 | 7 | Toques profesionales | exportar a Excel, validaciones |
 | 8 | Entrega | ejecutable con PyInstaller, README final |
 
