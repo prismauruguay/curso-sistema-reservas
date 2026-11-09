@@ -72,25 +72,36 @@ def _datos_cliente(nombre, direccion, telefono, email):
 # ---------------------------------------------------------------------
 #  Productos (clase 6)
 #
-#  Como en clientes: por ahora solo que el nombre no esté vacío. Un nombre
-#  repetido lo frena la base (UNIQUE); el mensaje claro llega en la clase 7.
+#  El nombre no puede estar vacío ni repetirse (clase 7).
 # ---------------------------------------------------------------------
 
 def agregar_producto(con, nombre):
     """RF-03. Devuelve el id que le asignó la base."""
-    return bd.agregar_producto(con, _nombre_producto(nombre))
+    return bd.agregar_producto(con, _nombre_producto(con, nombre))
 
 
 def renombrar_producto(con, producto_id, nombre):
     if bd.obtener_producto(con, producto_id) is None:
         raise ErrorNegocio(f"No existe el producto {producto_id}.")
-    bd.renombrar_producto(con, producto_id, _nombre_producto(nombre))
+    bd.renombrar_producto(con, producto_id, _nombre_producto(con, nombre, producto_id))
 
 
-def _nombre_producto(nombre):
+def _nombre_producto(con, nombre, producto_id=None):
+    """Limpia el nombre y controla que no esté vacío ni repetido.
+
+    `producto_id` es el producto que se está renombrando: que se "repita"
+    consigo mismo no cuenta (por ejemplo, al corregir solo una mayúscula).
+    """
     nombre = (nombre or "").strip()
     if not nombre:
         raise ErrorNegocio("Falta completar: nombre.")
+    # La base ya rechaza un nombre exactamente igual (UNIQUE), pero:
+    #   1. su error es técnico, y el usuario terminaba viendo "error inesperado";
+    #   2. para la base "Taladro 650W" y "taladro 650w" son distintos, y para
+    #      el negocio son el mismo producto. casefold() compara sin mayúsculas.
+    for p in bd.listar_productos(con):
+        if p["id"] != producto_id and p["nombre"].casefold() == nombre.casefold():
+            raise ErrorNegocio(f"Ya existe el producto «{p['nombre']}» (Nº {p['id']}).")
     return nombre
 
 
