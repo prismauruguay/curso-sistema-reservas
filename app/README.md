@@ -4,6 +4,7 @@ Código de la aplicación.
 
 - `bd.py` — conexión y consultas a la base (clase 3) ✔
 - `negocio.py` — reglas del negocio, sin interfaz ni SQL (clase 4) ✔
+- `exportar.py` — libro de Excel con lotes y reservas, sin interfaz (clase 7) ✔
 - `main.py` — punto de entrada: `python -m app.main` (clase 5) ✔
 - `ui/` — pantallas con CustomTkinter
   - `estilo.py` — apariencia común, tablas y listas desplegables (clases 5 y 6) ✔

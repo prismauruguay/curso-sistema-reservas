@@ -36,6 +36,10 @@ orden:
    mantener al día varias ventanas abiertas y confirmar lo que no tiene vuelta
    atrás. También muestra un filtro que el boceto olvidó, y que apareció al
    revisar la pantalla contra los requisitos.
+7. **[Toques profesionales](docs/toques_profesionales.md)**: convertir un
+   "error inesperado" previsible en un mensaje claro, validar lo justo sin
+   rechazar datos reales, y un Excel pensado para quien lo va a usar. También
+   deja escrito lo que se decidió no hacer.
 
 El código llega recién en la clase 3. La historia de commits y las etiquetas
 `clase-NN` muestran el proceso en orden.
@@ -46,17 +50,17 @@ Cada clase termina en una **etiqueta de git** (`clase-01`, `clase-02`, …).
 Si faltaste o te atrasaste, podés ponerte al día con:
 
 ```bash
-git checkout clase-06
+git checkout clase-07
 ```
 
 ## Estructura
 
 ```
 curso_reservas/
-├── docs/       requisitos, bocetos, modelo de datos, lógica de negocio, interfaz
+├── docs/       un documento por etapa: de los requisitos a la entrega
 ├── datos/      script de creación de la base y datos de ejemplo
 ├── app/        el código de la aplicación
-├── tests/      pruebas de las reglas y de las conversiones de pantalla
+├── tests/      pruebas de reglas, conversiones y exportación a Excel
 └── requirements.txt
 ```
 
@@ -70,7 +74,7 @@ curso_reservas/
 | 4 | Lógica de negocio | `app/negocio.py` + `tests/`, `docs/logica_negocio.md` |
 | 5 | Interfaz I | ventana principal y pantalla de Clientes, `docs/interfaz.md` |
 | 6 | Interfaz II | pantallas de Productos, Lotes y Reservas, `docs/interfaz_2.md` |
-| 7 | Toques profesionales | exportar a Excel, validaciones |
+| 7 | Toques profesionales | exportar a Excel, validaciones, `docs/toques_profesionales.md` |
 | 8 | Entrega | ejecutable con PyInstaller, README final |
 
 ## Poner en marcha el proyecto (clase 3)

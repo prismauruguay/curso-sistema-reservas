@@ -19,6 +19,7 @@ actualizar a mano cantidad_disponible, cantidad_reservada, stock_disponible y
 stock_reservado. Acá ninguna función toca un total: las vistas los calculan.
 """
 
+import re
 from datetime import date
 
 from app import bd
@@ -33,11 +34,14 @@ class ErrorNegocio(Exception):
 
 
 # ---------------------------------------------------------------------
-#  Clientes (clase 5)
+#  Clientes
 #
-#  Por ahora solo lo que pide RF-01: nombre, dirección y teléfono son
-#  obligatorios, el email no. Controlar formatos (email válido, teléfono)
-#  queda para la clase 7.
+#  RF-01: nombre, dirección y teléfono son obligatorios, el email no
+#  (clase 5). Teléfono y email tienen que tener una forma razonable (clase 7).
+#
+#  Se controla lo justo para atajar errores de tipeo, sin rechazar datos
+#  reales. Nombre y dirección NO tienen formato: "Bazar 18", "Pérez & Hijos"
+#  y "18 de Julio 1234" son válidos (ver docs/toques_profesionales.md).
 # ---------------------------------------------------------------------
 
 def agregar_cliente(con, nombre, direccion, telefono, email=""):
@@ -66,6 +70,23 @@ def _datos_cliente(nombre, direccion, telefono, email):
     if faltan:
         nombres = {"nombre": "nombre", "direccion": "dirección", "telefono": "teléfono"}
         raise ErrorNegocio("Falta completar: " + ", ".join(nombres[c] for c in faltan) + ".")
+
+    # Teléfono: números y los separadores que la gente usa al escribirlos
+    # ("099 123 456", "2400-1234", "+598 (2) 400 1234"), con al menos 6 números.
+    telefono = datos["telefono"]
+    if not re.fullmatch(r"[0-9 +()\-]+", telefono) or len(re.sub(r"\D", "", telefono)) < 6:
+        raise ErrorNegocio(
+            f"El teléfono «{telefono}» no parece válido: puede tener números, "
+            "espacios, guiones, paréntesis y +, y al menos 6 números."
+        )
+
+    # Email: algo@algo.algo, sin espacios. No intentamos más que eso: la única
+    # forma de saber si un email existe es mandarle un correo.
+    email = datos["email"]
+    if email is not None and not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s.]+", email):
+        raise ErrorNegocio(
+            f"El email «{email}» no parece válido. Ejemplo: ventas@empresa.com.uy"
+        )
     return datos
 
 

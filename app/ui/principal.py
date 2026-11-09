@@ -5,11 +5,14 @@ Además de abrir pantallas, coordina: cuando una pantalla guarda algo, el menú
 les avisa a las otras que están abiertas para que se actualicen (clase 6).
 """
 
+import os
 import traceback
-from tkinter import messagebox
+from pathlib import Path
+from tkinter import filedialog, messagebox
 
 import customtkinter as ctk
 
+from app import exportar
 from app.ui import estilo
 from app.ui.clientes import VentanaClientes
 from app.ui.lotes import VentanaLotes
@@ -31,23 +34,20 @@ class VentanaPrincipal(ctk.CTk):
 
         estilo.titulo(self, "SISTEMA DE RESERVAS").pack(pady=(24, 16))
 
-        opciones = [
-            # texto               pantalla (None = todavía no existe)
-            ("Clientes",          VentanaClientes),
-            ("Productos",         VentanaProductos),
-            ("Lotes",             VentanaLotes),
-            ("Reservas",          VentanaReservas),
-            ("Exportar a Excel",  None),     # clase 7
+        pantallas = [
+            ("Clientes",  VentanaClientes),
+            ("Productos", VentanaProductos),
+            ("Lotes",     VentanaLotes),
+            ("Reservas",  VentanaReservas),
         ]
-        for texto, pantalla in opciones:
-            boton = ctk.CTkButton(
+        for texto, pantalla in pantallas:
+            ctk.CTkButton(
                 self, text=texto, height=44,
                 command=lambda t=texto, p=pantalla: self.abrir(t, p),
-            )
-            if pantalla is None:
-                # Gris, para que no parezca un botón que anda y no responde.
-                boton.configure(state="disabled", fg_color="gray78")
-            boton.pack(fill="x", padx=40, pady=5)
+            ).pack(fill="x", padx=40, pady=5)
+
+        ctk.CTkButton(self, text="Exportar a Excel", height=44,
+                      command=self.exportar_excel).pack(fill="x", padx=40, pady=5)
 
         ctk.CTkButton(self, text="Salir", height=44, fg_color="gray45",
                       hover_color="gray35", command=self.destroy
@@ -72,6 +72,34 @@ class VentanaPrincipal(ctk.CTk):
         for ventana in self.ventanas.values():
             if ventana is not origen and ventana.winfo_exists():
                 ventana.actualizar()
+
+    def exportar_excel(self):
+        """RF-12. Pregunta dónde guardar, exporta y ofrece abrir el archivo."""
+        ruta = filedialog.asksaveasfilename(
+            parent=self,
+            title="Exportar lotes y reservas",
+            initialfile=exportar.nombre_sugerido(),
+            defaultextension=".xlsx",
+            filetypes=[("Libro de Excel", "*.xlsx")],
+        )
+        if not ruta:                 # tocó Cancelar
+            return
+        try:
+            exportar.exportar_excel(self.con, ruta)
+        except PermissionError:
+            # Lo más común: el archivo está abierto en Excel, y Windows no
+            # deja reemplazar un archivo abierto. Es previsible: mensaje claro.
+            messagebox.showwarning(
+                "No se pudo exportar",
+                f"No se pudo guardar {Path(ruta).name}.\n\n"
+                "Si está abierto en Excel, cerralo y probá de nuevo.",
+                parent=self,
+            )
+            return
+        if messagebox.askyesno("Exportado",
+                               f"Se guardó {Path(ruta).name}.\n\n¿Abrirlo ahora?",
+                               parent=self):
+            os.startfile(ruta)       # lo abre con el programa asociado (Excel)
 
     def report_callback_exception(self, tipo, valor, rastro):
         """Tkinter llama a esto cuando un botón produce un error NO previsto
