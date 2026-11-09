@@ -89,3 +89,10 @@ La base **no se sube a git**: cada uno la genera con este comando.
 - Visual Studio Code — <https://code.visualstudio.com/>
 - Git — <https://git-scm.com/downloads>
 - DB Browser for SQLite — <https://sqlitebrowser.org/>
+
+## Licencia
+
+- **Documentos** (archivos `.md`, incluidos requisitos, bocetos y modelo de datos):
+  [CC BY 4.0](LICENSE-DOCS.md). Podés usarlos y adaptarlos, también para tus
+  propios cursos, siempre que cites la fuente.
+- **Código** (`.py`, `.sql`): [MIT](LICENSE).
