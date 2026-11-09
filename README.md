@@ -24,6 +24,9 @@ orden:
    Cada decisión de diseño está explicada, junto con el error del sistema
    original que corrige: datos duplicados, totales guardados a mano, fechas como
    texto que no se ordenan bien y contraseñas dentro de la base.
+4. **[Lógica de negocio y tests](docs/logica_negocio.md)**: cada regla pasa a
+   código separado de la interfaz y de la base, y cada una tiene un test.
+   Incluye una regla que apareció al programar y volvió a los requisitos.
 
 El código llega recién en la clase 3. La historia de commits y las etiquetas
 `clase-NN` muestran el proceso en orden.
@@ -34,14 +37,14 @@ Cada clase termina en una **etiqueta de git** (`clase-01`, `clase-02`, …).
 Si faltaste o te atrasaste, podés ponerte al día con:
 
 ```bash
-git checkout clase-03
+git checkout clase-04
 ```
 
 ## Estructura
 
 ```
 curso_reservas/
-├── docs/       requisitos, modelo de datos, bocetos de pantallas
+├── docs/       requisitos, bocetos, modelo de datos, lógica de negocio
 ├── datos/      script de creación de la base y datos de ejemplo
 ├── app/        el código de la aplicación
 ├── tests/      pruebas de la lógica de negocio
@@ -55,7 +58,7 @@ curso_reservas/
 | 1 | Del problema al diseño | `docs/requisitos.md`, `docs/bocetos.md` |
 | 2 | Modelo de datos | `docs/modelo_er.md`, `datos/esquema.sql` |
 | 3 | Proyecto y base de datos | entorno virtual, git, `app/bd.py` |
-| 4 | Lógica de negocio | `app/negocio.py` + `tests/` |
+| 4 | Lógica de negocio | `app/negocio.py` + `tests/`, `docs/logica_negocio.md` |
 | 5 | Interfaz I | ventana principal y pantalla de Clientes |
 | 6 | Interfaz II | pantallas de Lotes y Reservas |
 | 7 | Toques profesionales | exportar a Excel, validaciones |
@@ -82,6 +85,17 @@ python -m app.bd
 
 El paso 4 crea `reservas.db`. Podés abrirla con DB Browser for SQLite para mirarla.
 La base **no se sube a git**: cada uno la genera con este comando.
+
+## Correr los tests (clase 4)
+
+Con el entorno activado:
+
+```bash
+pytest
+```
+
+Prueban todas las reglas de negocio sobre una base en memoria. No hace falta
+haber creado `reservas.db`, y si existe, no la tocan.
 
 ## Requisitos para instalar (antes de la clase 3)
 

@@ -3,7 +3,7 @@
 Código de la aplicación.
 
 - `bd.py` — conexión y consultas a la base (clase 3) ✔
-- `negocio.py` — reglas del negocio, sin interfaz (clase 4)
+- `negocio.py` — reglas del negocio, sin interfaz ni SQL (clase 4) ✔
 - `ui/` — pantallas con CustomTkinter (clases 5 y 6)
 - `main.py` — punto de entrada (clase 5)
 

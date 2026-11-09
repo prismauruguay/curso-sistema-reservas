@@ -71,6 +71,9 @@ Acordar las palabras **antes** de programar evita malentendidos.
 - **RN-06** Un lote con alguna reserva **entregada** no se puede anular.
 - **RN-07** Al anular un lote, sus reservas pendientes pasan a **canceladas**.
 - **RN-08** Nada se borra: reservas y lotes se **cancelan / anulan** para conservar la historia.
+- **RN-09** No se puede cambiar la fecha de arribo de un lote que ya tiene
+  entregas (la mercadería ya llegó). *Agregada en la clase 4: apareció al
+  programar `cambiar_fecha_lote`, ver [lógica de negocio](logica_negocio.md#4-una-regla-que-apareció-al-programar).*
 
 Estados de una reserva:
 

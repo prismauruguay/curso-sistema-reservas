@@ -115,6 +115,14 @@ def listar_productos(con):
     ).fetchall()
 
 
+def obtener_producto(con, producto_id):
+    """Un producto con sus totales, o None si no existe."""
+    return con.execute(
+        "SELECT id, nombre, disponible, reservado FROM v_productos WHERE id = ?",
+        (producto_id,),
+    ).fetchone()
+
+
 def agregar_producto(con, nombre):
     with con:
         cursor = con.execute("INSERT INTO productos (nombre) VALUES (?)", (nombre,))
@@ -129,7 +137,10 @@ def renombrar_producto(con, producto_id, nombre):
 
 
 # ---------------------------------------------------------------------
-#  Lotes (solo lectura: las altas y cambios con reglas llegan en la clase 4)
+#  Lotes
+#
+#  Las funciones que escriben NO controlan reglas de negocio: solo guardan.
+#  Quién puede anular, qué fecha es válida, etc. lo decide negocio.py.
 # ---------------------------------------------------------------------
 
 def listar_lotes(con, incluir_anulados=False):
@@ -153,9 +164,81 @@ def obtener_lote(con, lote_id):
     ).fetchone()
 
 
+def agregar_lote(con, producto_id, cantidad_comprada, fecha_arribo):
+    """Guarda un lote nuevo (fecha en texto AAAA-MM-DD) y devuelve su id."""
+    with con:
+        cursor = con.execute(
+            "INSERT INTO lotes (producto_id, cantidad_comprada, fecha_arribo) VALUES (?, ?, ?)",
+            (producto_id, cantidad_comprada, fecha_arribo),
+        )
+    return cursor.lastrowid
+
+
+def cambiar_fecha_lote(con, lote_id, fecha_arribo):
+    # Una sola fila. En el sistema original la fecha estaba copiada en cada
+    # reserva del lote y había que actualizarlas todas (modelo_er.md §4.1).
+    with con:
+        con.execute("UPDATE lotes SET fecha_arribo = ? WHERE id = ?", (fecha_arribo, lote_id))
+
+
+def anular_lote(con, lote_id):
+    """Anula el lote y cancela sus reservas pendientes (RN-07).
+
+    Las dos cosas van en UNA transacción: o pasan las dos, o ninguna.
+    Devuelve cuántas reservas se cancelaron.
+    """
+    with con:
+        con.execute("UPDATE lotes SET estado = 'Anulado' WHERE id = ?", (lote_id,))
+        cursor = con.execute(
+            "UPDATE reservas SET estado = 'Cancelado' WHERE lote_id = ? AND estado = 'Reservado'",
+            (lote_id,),
+        )
+    return cursor.rowcount
+
+
 # ---------------------------------------------------------------------
-#  Reservas (solo lectura, por ahora)
+#  Reservas
 # ---------------------------------------------------------------------
+
+def obtener_reserva(con, reserva_id):
+    """Una reserva con los datos de su lote que necesitan las reglas
+    (fecha de arribo, estado del lote), o None si no existe."""
+    return con.execute(
+        """SELECT r.id, r.cliente_id, r.lote_id, r.cantidad, r.estado,
+                  r.fecha_reserva, r.fecha_entrega,
+                  l.fecha_arribo, l.estado AS estado_lote
+           FROM reservas r
+           JOIN lotes l ON l.id = r.lote_id
+           WHERE r.id = ?""",
+        (reserva_id,),
+    ).fetchone()
+
+
+def agregar_reserva(con, cliente_id, lote_id, cantidad, fecha_reserva):
+    """Guarda una reserva nueva en estado Reservado y devuelve su id."""
+    with con:
+        cursor = con.execute(
+            """INSERT INTO reservas (cliente_id, lote_id, cantidad, fecha_reserva)
+               VALUES (?, ?, ?, ?)""",
+            (cliente_id, lote_id, cantidad, fecha_reserva),
+        )
+    return cursor.lastrowid
+
+
+def marcar_entregada(con, reserva_id, fecha_entrega):
+    # Comparar con el sistema original: ahí entregar también actualizaba
+    # cantidad_reservada del lote y stock_reservado del producto. Acá las
+    # vistas recalculan solas.
+    with con:
+        con.execute(
+            "UPDATE reservas SET estado = 'Entregado', fecha_entrega = ? WHERE id = ?",
+            (fecha_entrega, reserva_id),
+        )
+
+
+def marcar_cancelada(con, reserva_id):
+    with con:
+        con.execute("UPDATE reservas SET estado = 'Cancelado' WHERE id = ?", (reserva_id,))
 
 def listar_reservas(con, cliente_id=None, producto_id=None, estado=None):
     """Reservas con los datos que muestra la pantalla (RF-11).
