@@ -40,46 +40,42 @@ orden:
    "error inesperado" previsible en un mensaje claro, validar lo justo sin
    rechazar datos reales, y un Excel pensado para quien lo va a usar. También
    deja escrito lo que se decidió no hacer.
+8. **[Entrega](docs/entrega.md)**: lo que cambia cuando el programa sale de la
+   PC de quien lo escribió (dónde van los datos, a dónde van los errores sin
+   terminal), la lista de entrega y una mirada al recorrido completo.
 
 El código llega recién en la clase 3. La historia de commits y las etiquetas
-`clase-NN` muestran el proceso en orden.
+`clase-NN` muestran el proceso en orden. A lo largo del curso, cada vez que el
+diseño cambió al programar, se volvió al documento y se dejó una nota de por
+qué.
+
+## Qué hace el programa
+
+- **Clientes y productos**: alta, modificación y búsqueda.
+- **Lotes**: la mercadería que viene en camino, con su fecha de arribo. Se
+  puede cambiar la fecha si el envío se atrasa, o anular el lote si la compra
+  se cae.
+- **Reservas**: apartar unidades de un lote para un cliente, sin poder
+  reservar más de lo que viene. Entregar cuando llega, o cancelar.
+- **Totales al día**: disponible, reservado y entregado se calculan, nunca se
+  cargan a mano.
+- **Exportar a Excel** lotes y reservas, listo para filtrar y ordenar.
 
 ## Cómo se trabaja
 
-Cada clase termina en una **etiqueta de git** (`clase-01`, `clase-02`, …).
-Si faltaste o te atrasaste, podés ponerte al día con:
+Cada clase termina en una **etiqueta de git** (`clase-01` … `clase-08`).
+Para ver el proyecto como quedó al final de una clase:
 
 ```bash
-git checkout clase-07
+git checkout clase-04      # y para volver al final:  git checkout main
 ```
 
-## Estructura
+## Poner en marcha el proyecto
 
-```
-curso_reservas/
-├── docs/       un documento por etapa: de los requisitos a la entrega
-├── datos/      script de creación de la base y datos de ejemplo
-├── app/        el código de la aplicación
-├── tests/      pruebas de reglas, conversiones y exportación a Excel
-└── requirements.txt
-```
+Requisitos: **Python 3.12 o superior** y **Git**. Para seguir el curso también:
+Visual Studio Code y DB Browser for SQLite (ver al final).
 
-## Plan del curso
-
-| Clase | Tema | Resultado |
-|-------|------|-----------|
-| 1 | Del problema al diseño | `docs/requisitos.md`, `docs/bocetos.md` |
-| 2 | Modelo de datos | `docs/modelo_er.md`, `datos/esquema.sql` |
-| 3 | Proyecto y base de datos | entorno virtual, git, `app/bd.py` |
-| 4 | Lógica de negocio | `app/negocio.py` + `tests/`, `docs/logica_negocio.md` |
-| 5 | Interfaz I | ventana principal y pantalla de Clientes, `docs/interfaz.md` |
-| 6 | Interfaz II | pantallas de Productos, Lotes y Reservas, `docs/interfaz_2.md` |
-| 7 | Toques profesionales | exportar a Excel, validaciones, `docs/toques_profesionales.md` |
-| 8 | Entrega | ejecutable con PyInstaller, README final |
-
-## Poner en marcha el proyecto (clase 3)
-
-Desde una terminal en la carpeta `curso_reservas` (en VS Code: *Terminal → New Terminal*):
+Desde una terminal en la carpeta del proyecto (en VS Code: *Terminal → New Terminal*):
 
 ```bash
 # 1. Crear el entorno virtual (una sola vez)
@@ -92,36 +88,74 @@ source .venv/bin/activate       # macOS / Linux
 # 3. Instalar las librerías del proyecto
 pip install -r requirements.txt
 
-# 4. Crear la base con los datos de ejemplo
+# 4. Crear la base con los datos de ejemplo (opcional)
 python -m app.bd
 ```
 
-El paso 4 crea `reservas.db`. Podés abrirla con DB Browser for SQLite para mirarla.
-La base **no se sube a git**: cada uno la genera con este comando.
+El paso 4 crea `reservas.db` con clientes, productos, lotes y reservas
+**ficticios**. Podés abrirla con DB Browser for SQLite para mirarla. La base
+**no se sube a git**: cada uno la genera con este comando.
 
-## Correr los tests (clase 4)
-
-Con el entorno activado:
-
-```bash
-pytest
-```
-
-Prueban todas las reglas de negocio sobre una base en memoria. No hace falta
-haber creado `reservas.db`, y si existe, no la tocan.
-
-## Abrir el programa (clase 5)
-
-Con el entorno activado:
+### Abrir el programa
 
 ```bash
 python -m app.main
 ```
 
-Si todavía no existe `reservas.db`, se crea vacía. Para ver datos de ejemplo,
-corré antes `python -m app.bd`.
+Si todavía no existe `reservas.db`, se crea vacía.
 
-## Requisitos para instalar (antes de la clase 3)
+### Correr los tests
+
+```bash
+pytest
+```
+
+Prueban reglas de negocio, conversiones y la exportación a Excel sobre una base
+en memoria. No hace falta haber creado `reservas.db`, y si existe, no la tocan.
+
+### Armar el programa para Windows
+
+```bash
+pyinstaller SistemaReservas.spec --noconfirm
+```
+
+El resultado queda en `dist/SistemaReservas/`. Para entregarlo, se comprime esa
+carpeta. El programa instalado guarda sus datos en
+`%LOCALAPPDATA%\SistemaReservas`. Antes de entregar, revisá la
+[lista de entrega](docs/entrega.md#7-lista-de-entrega).
+
+## Estructura
+
+```
+curso_reservas/
+├── docs/                   un documento por etapa: de los requisitos a la entrega
+├── datos/                  script de creación de la base y datos de ejemplo
+├── app/                    el código (ver app/README.md)
+│   ├── bd.py               el único archivo con SQL
+│   ├── negocio.py          las reglas: qué se puede hacer y qué no
+│   ├── exportar.py         el libro de Excel
+│   ├── ubicaciones.py      dónde va cada archivo, en desarrollo e instalado
+│   ├── main.py             punto de entrada
+│   └── ui/                 las pantallas
+├── tests/                  pruebas que corren sin abrir ventanas
+├── SistemaReservas.spec    la receta de PyInstaller
+└── requirements.txt
+```
+
+## Las 8 clases
+
+| Clase | Tema | Resultado |
+|-------|------|-----------|
+| 1 | Del problema al diseño | `docs/requisitos.md`, `docs/bocetos.md` |
+| 2 | Modelo de datos | `docs/modelo_er.md`, `datos/esquema.sql` |
+| 3 | Proyecto y base de datos | entorno virtual, git, `app/bd.py` |
+| 4 | Lógica de negocio | `app/negocio.py` + `tests/`, `docs/logica_negocio.md` |
+| 5 | Interfaz I | ventana principal y pantalla de Clientes, `docs/interfaz.md` |
+| 6 | Interfaz II | pantallas de Productos, Lotes y Reservas, `docs/interfaz_2.md` |
+| 7 | Toques profesionales | exportar a Excel, validaciones, `docs/toques_profesionales.md` |
+| 8 | Entrega | ejecutable con PyInstaller, `docs/entrega.md`, este README |
+
+## Herramientas para seguir el curso
 
 - Python 3.12 o superior — <https://www.python.org/downloads/>
 - Visual Studio Code — <https://code.visualstudio.com/>

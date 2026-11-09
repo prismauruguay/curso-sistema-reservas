@@ -15,11 +15,13 @@ Tres reglas que seguimos en todo el archivo:
 """
 
 import sqlite3
-from pathlib import Path
 
-CARPETA_PROYECTO = Path(__file__).resolve().parent.parent
-RUTA_BD = CARPETA_PROYECTO / "reservas.db"
-CARPETA_DATOS = CARPETA_PROYECTO / "datos"
+from app import ubicaciones
+
+# Dónde está cada cosa lo decide ubicaciones.py (clase 8): no es lo mismo
+# correr desde el proyecto que desde el .exe instalado.
+RUTA_BD = ubicaciones.carpeta_usuario() / "reservas.db"
+CARPETA_DATOS = ubicaciones.carpeta_programa() / "datos"
 
 
 # ---------------------------------------------------------------------

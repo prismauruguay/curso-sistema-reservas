@@ -12,6 +12,8 @@ Pruebas que se corren sin abrir ninguna ventana.
   Clase 6.
 - `test_exportar.py`: el Excel se genera en una carpeta temporal y se vuelve a
   abrir para revisarlo. Clase 7.
+- `test_ubicaciones.py`: dónde van los archivos del programa y los datos del
+  usuario. Clase 8.
 
 Para correrlos, desde la carpeta del proyecto y con el entorno activado:
 

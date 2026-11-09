@@ -5,14 +5,14 @@ Además de abrir pantallas, coordina: cuando una pantalla guarda algo, el menú
 les avisa a las otras que están abiertas para que se actualicen (clase 6).
 """
 
+import logging
 import os
-import traceback
 from pathlib import Path
 from tkinter import filedialog, messagebox
 
 import customtkinter as ctk
 
-from app import exportar
+from app import __version__, exportar
 from app.ui import estilo
 from app.ui.clientes import VentanaClientes
 from app.ui.lotes import VentanaLotes
@@ -28,7 +28,7 @@ class VentanaPrincipal(ctk.CTk):
         # Una sola ventana abierta de cada pantalla: nombre -> ventana.
         self.ventanas = {}
 
-        self.title("Sistema de Reservas")
+        self.title(f"Sistema de Reservas {__version__}")
         self.geometry("320x480")
         self.resizable(False, False)
 
@@ -106,9 +106,10 @@ class VentanaPrincipal(ctk.CTk):
         (no un ErrorNegocio: un error de programación, un archivo bloqueado…).
 
         Al usuario: un mensaje claro, nunca el error técnico (RNF-04).
-        Al programador: el detalle completo en la terminal.
+        Al programador: el detalle completo en errores.log (y en la terminal,
+        si hay una). Ver main.configurar_registro().
         """
-        traceback.print_exception(tipo, valor, rastro)
+        logging.error("Error inesperado", exc_info=(tipo, valor, rastro))
         messagebox.showerror(
             "Error inesperado",
             "Ocurrió un error inesperado y la operación no se completó.\n"

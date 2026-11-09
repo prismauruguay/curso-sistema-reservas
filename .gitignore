@@ -7,14 +7,15 @@ entorno/
 __pycache__/
 *.pyc
 
-# PyInstaller
+# PyInstaller: lo que GENERA no se sube (se rearma con un comando).
+# La receta, SistemaReservas.spec, sí se sube: es parte del proyecto.
 build/
 dist/
-*.spec
 
-# Base de datos local (se genera con datos/esquema.sql)
+# Base de datos local (se genera con datos/esquema.sql) y registro de errores
 *.db
 *.db-journal
+errores.log
 
 # Credenciales y configuración local: NUNCA al repositorio
 credenciales*.json
