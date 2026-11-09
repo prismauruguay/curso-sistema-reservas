@@ -7,6 +7,27 @@ antes de que llegue** al depósito.
 > Basado en un sistema real que funciona en una importadora. Acá lo rehacemos
 > paso a paso, corrigiendo los errores de diseño que tuvo la primera versión.
 
+## Cómo encaramos un proyecto
+
+La idea central del curso: **no se empieza escribiendo código**. Primero se
+entiende el problema, después se decide qué datos hacen falta, y recién entonces
+se programa. Los documentos de [`docs/`](docs/) muestran ese recorrido, en este
+orden:
+
+1. **[Requisitos](docs/requisitos.md)**: el problema del cliente, quién usa el
+   sistema, un glosario para acordar las palabras, requisitos funcionales, reglas
+   de negocio y, también importante, lo que queda **fuera de alcance**.
+2. **[Bocetos de pantallas](docs/bocetos.md)**: qué datos muestra y pide cada
+   pantalla, dibujados antes de pensar en el diseño visual. De acá surgen las
+   preguntas que se responden en el paso siguiente.
+3. **[Modelo de datos](docs/modelo_er.md)**: de los sustantivos a las tablas.
+   Cada decisión de diseño está explicada, junto con el error del sistema
+   original que corrige: datos duplicados, totales guardados a mano, fechas como
+   texto que no se ordenan bien y contraseñas dentro de la base.
+
+El código llega recién en la clase 3. La historia de commits y las etiquetas
+`clase-NN` muestran el proceso en orden.
+
 ## Cómo se trabaja
 
 Cada clase termina en una **etiqueta de git** (`clase-01`, `clase-02`, …).
