@@ -33,6 +33,43 @@ class ErrorNegocio(Exception):
 
 
 # ---------------------------------------------------------------------
+#  Clientes (clase 5)
+#
+#  Por ahora solo lo que pide RF-01: nombre, dirección y teléfono son
+#  obligatorios, el email no. Controlar formatos (email válido, teléfono)
+#  queda para la clase 7.
+# ---------------------------------------------------------------------
+
+def agregar_cliente(con, nombre, direccion, telefono, email=""):
+    """RF-01. Devuelve el id que le asignó la base."""
+    datos = _datos_cliente(nombre, direccion, telefono, email)
+    return bd.agregar_cliente(con, **datos)
+
+
+def modificar_cliente(con, cliente_id, nombre, direccion, telefono, email=""):
+    """RF-02."""
+    if bd.obtener_cliente(con, cliente_id) is None:
+        raise ErrorNegocio(f"No existe el cliente {cliente_id}.")
+    datos = _datos_cliente(nombre, direccion, telefono, email)
+    bd.modificar_cliente(con, cliente_id, **datos)
+
+
+def _datos_cliente(nombre, direccion, telefono, email):
+    """Limpia lo que escribió el usuario y controla que no falte nada."""
+    datos = {
+        "nombre": (nombre or "").strip(),
+        "direccion": (direccion or "").strip(),
+        "telefono": (telefono or "").strip(),
+        "email": (email or "").strip() or None,     # vacío -> sin email
+    }
+    faltan = [campo for campo in ("nombre", "direccion", "telefono") if not datos[campo]]
+    if faltan:
+        nombres = {"nombre": "nombre", "direccion": "dirección", "telefono": "teléfono"}
+        raise ErrorNegocio("Falta completar: " + ", ".join(nombres[c] for c in faltan) + ".")
+    return datos
+
+
+# ---------------------------------------------------------------------
 #  Lotes
 # ---------------------------------------------------------------------
 

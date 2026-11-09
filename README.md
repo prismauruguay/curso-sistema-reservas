@@ -27,6 +27,11 @@ orden:
 4. **[Lógica de negocio y tests](docs/logica_negocio.md)**: cada regla pasa a
    código separado de la interfaz y de la base, y cada una tiene un test.
    Incluye una regla que apareció al programar y volvió a los requisitos.
+5. **[Interfaz](docs/interfaz.md)**: los bocetos se convierten en ventanas. La
+   pantalla solo muestra y pide datos, y los errores previstos e imprevistos
+   tienen cada uno su tratamiento. También muestra qué cambió del boceto al
+   programarlo, y un error que no se veía leyendo el código pero apareció al
+   probar.
 
 El código llega recién en la clase 3. La historia de commits y las etiquetas
 `clase-NN` muestran el proceso en orden.
@@ -37,14 +42,14 @@ Cada clase termina en una **etiqueta de git** (`clase-01`, `clase-02`, …).
 Si faltaste o te atrasaste, podés ponerte al día con:
 
 ```bash
-git checkout clase-04
+git checkout clase-05
 ```
 
 ## Estructura
 
 ```
 curso_reservas/
-├── docs/       requisitos, bocetos, modelo de datos, lógica de negocio
+├── docs/       requisitos, bocetos, modelo de datos, lógica de negocio, interfaz
 ├── datos/      script de creación de la base y datos de ejemplo
 ├── app/        el código de la aplicación
 ├── tests/      pruebas de la lógica de negocio
@@ -59,7 +64,7 @@ curso_reservas/
 | 2 | Modelo de datos | `docs/modelo_er.md`, `datos/esquema.sql` |
 | 3 | Proyecto y base de datos | entorno virtual, git, `app/bd.py` |
 | 4 | Lógica de negocio | `app/negocio.py` + `tests/`, `docs/logica_negocio.md` |
-| 5 | Interfaz I | ventana principal y pantalla de Clientes |
+| 5 | Interfaz I | ventana principal y pantalla de Clientes, `docs/interfaz.md` |
 | 6 | Interfaz II | pantallas de Lotes y Reservas |
 | 7 | Toques profesionales | exportar a Excel, validaciones |
 | 8 | Entrega | ejecutable con PyInstaller, README final |
@@ -96,6 +101,17 @@ pytest
 
 Prueban todas las reglas de negocio sobre una base en memoria. No hace falta
 haber creado `reservas.db`, y si existe, no la tocan.
+
+## Abrir el programa (clase 5)
+
+Con el entorno activado:
+
+```bash
+python -m app.main
+```
+
+Si todavía no existe `reservas.db`, se crea vacía. Para ver datos de ejemplo,
+corré antes `python -m app.bd`.
 
 ## Requisitos para instalar (antes de la clase 3)
 

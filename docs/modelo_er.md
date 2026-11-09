@@ -121,7 +121,7 @@ SQLite no tiene tipo "fecha": se guardan como texto. Si se guardan como
 En formato ISO (`2026-11-15`) el orden alfabético **es** el orden cronológico.
 
 La pantalla muestra `15/11/2026`; la base guarda `2026-11-15`. Convertir es
-trabajo de la interfaz (clase 5).
+trabajo de la interfaz (clase 6, pantallas de Lotes y Reservas).
 
 ### 4.4 Estados en lugar de borrar
 

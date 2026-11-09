@@ -41,6 +41,10 @@
 └─────────────────────────────────────────────────────────────┘
 ```
 
+> **Cambio en la clase 5.** Al programar la pantalla, *Nuevo* y *Limpiar*
+> terminaron haciendo lo mismo: vaciar el formulario para cargar un cliente.
+> Quedó solo **Nuevo**. Ver [interfaz](interfaz.md#3-del-boceto-a-la-pantalla).
+
 ## Productos (RF-03, RF-04)
 
 ```

@@ -117,10 +117,12 @@ nota de dónde salió.
 
 ## 5. Qué quedó para más adelante
 
-- Validar los datos de clientes y productos (campos vacíos, nombres repetidos):
-  **clase 7**.
+- Validar los datos de clientes y productos: campos obligatorios en la
+  **clase 5** ([interfaz](interfaz.md#1-qué-hace-la-pantalla-y-qué-no));
+  formatos y nombres repetidos en la **clase 7**.
 - Convertir lo que escribe el usuario (`"15/11/2026"`, `"12"`) a `date` e `int`
-  antes de llamar a `negocio`: **clase 5**, en la interfaz.
+  antes de llamar a `negocio`: **clase 6**, en las pantallas de Lotes y
+  Reservas.
 - Dos PCs reservando del mismo lote al mismo tiempo: fuera de alcance (una sola
   PC). Con varias, controlar el disponible y guardar la reserva tendrían que ser
   un único paso atómico.
